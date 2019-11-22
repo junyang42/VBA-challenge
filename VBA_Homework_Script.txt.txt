@@ -1,0 +1,119 @@
+Sub Testing():
+    
+    For Each ws In Worksheets
+        
+        Dim a As Integer
+        Dim b As Double
+        Dim Close_P As Double
+        Dim Total_V As Double
+        Dim Yearly_change As Double
+        Dim Percent_change As Double
+          
+        Total_V = 0
+        
+        a = 2
+        b = 0
+        
+        Lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        Lastrow2 = ws.Cells(Rows.Count, 11).End(xlUp).Row
+        
+        ws.Cells(1, 9).Value = "Ticker Symbol"
+        ws.Cells(1, 10).Value = "Yearly change"
+        ws.Cells(1, 11).Value = "Percent change"
+        ws.Cells(1, 12).Value = "Total Stock Volumn"
+        ws.Columns("k").NumberFormat = "0.00%"
+     
+        For i = 2 To Lastrow
+        
+            If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+            
+                ws.Cells(a, 9).Value = ws.Cells(i, 1).Value 'assign the ticker symbol
+                Total_V = Total_V + ws.Cells(i, 7).Value
+                ws.Cells(a, 12).Value = Total_V
+                Close_P = ws.Cells(i, 6).Value
+                
+                'given the condition we only know the last column # when condition was met,
+                'in order to find the fisrt row of each "ticker category", I tried something like
+                'Displacement phase elimination
+                
+                b = b + ws.Cells(i, 3).Value
+                'here "b" stand for the fisrt value of each "ticker category", or the open price at the beginning of a year
+                'however, I feel this code would not be working,if
+                'the targeted numbwer was not listed at the very beginning of each column
+                Yearly_change = Close_P - b
+                ws.Cells(a, 10).Value = Yearly_change
+                
+                If b <> 0 Then
+                    ws.Cells(a, 11).Value = Yearly_change / b
+                Else
+                    ws.Cells(a, 11).Value = "0"
+                End If
+               
+                a = a + 1
+                Close_P = 0
+                Total_V = 0
+                b = 0
+                
+             Else
+             
+                Total_V = Total_V + ws.Cells(i, 7).Value
+                b = b + ws.Cells(i, 3).Value - ws.Cells(i + 1, 3).Value
+            
+             End If
+                      
+        
+        Next i
+        
+        Dim Greatest_I As Variant
+        Dim Greatest_D As Variant
+        Dim Greatest_V As Double
+        
+        Greatest_I = 0
+        Greatest_D = 0
+        Greatest_V = 0
+        
+        ws.Cells(1, 16).Value = "Ticker"
+        ws.Cells(1, 17).Value = "Value"
+        ws.Cells(2, 15).Value = "Greatest % increase"
+        ws.Cells(3, 15).Value = "Greatest % Decrease"
+        ws.Cells(4, 15).Value = "Greatest total volume"
+        ws.Range("Q2:Q3").NumberFormat = "0.00%"
+        
+        For i = 2 To Lastrow2
+            
+            If ws.Cells(i, 10).Value >= 0 Then
+               ws.Cells(i, 10).Interior.ColorIndex = 4
+            
+            Else
+                ws.Cells(i, 10).Interior.ColorIndex = 3
+            End If
+            
+     
+            If (ws.Cells(i, 11).Value > Greatest_I) Then
+                Greatest_I = ws.Cells(i, 11).Value
+                ws.Cells(2, 17).Value = Greatest_I
+                ws.Cells(2, 16).Value = ws.Cells(i, 9).Value
+                
+        
+            ElseIf (ws.Cells(i, 11).Value < Greatest_D) Then
+                Greatest_D = ws.Cells(i, 11).Value
+                ws.Cells(3, 17).Value = Greatest_D
+                ws.Cells(3, 16).Value = ws.Cells(i, 9).Value
+            End If
+            
+            If (ws.Cells(i, 12).Value > Greatest_V) Then
+                Greatest_V = ws.Cells(i, 12).Value
+                ws.Cells(4, 17).Value = Greatest_V
+                ws.Cells(4, 16).Value = ws.Cells(i, 9).Value
+            End If
+        
+        
+        Next i
+                 
+
+
+    ws.Range("A:J").Columns.AutoFit 'how to make all cells autofit?
+
+    Next ws
+
+End Sub
