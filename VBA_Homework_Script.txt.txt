@@ -40,6 +40,7 @@ Sub Testing():
                 'here "b" stand for the fisrt value of each "ticker category", or the open price at the beginning of a year
                 'however, I feel this code would not be working,if
                 'the targeted numbwer was not listed at the very beginning of each column
+                
                 Yearly_change = Close_P - b
                 ws.Cells(a, 10).Value = Yearly_change
                 
@@ -60,8 +61,7 @@ Sub Testing():
                 b = b + ws.Cells(i, 3).Value - ws.Cells(i + 1, 3).Value
             
              End If
-                      
-        
+                         
         Next i
         
         Dim Greatest_I As Variant
@@ -92,8 +92,7 @@ Sub Testing():
             If (ws.Cells(i, 11).Value > Greatest_I) Then
                 Greatest_I = ws.Cells(i, 11).Value
                 ws.Cells(2, 17).Value = Greatest_I
-                ws.Cells(2, 16).Value = ws.Cells(i, 9).Value
-                
+                ws.Cells(2, 16).Value = ws.Cells(i, 9).Value              
         
             ElseIf (ws.Cells(i, 11).Value < Greatest_D) Then
                 Greatest_D = ws.Cells(i, 11).Value
@@ -105,12 +104,9 @@ Sub Testing():
                 Greatest_V = ws.Cells(i, 12).Value
                 ws.Cells(4, 17).Value = Greatest_V
                 ws.Cells(4, 16).Value = ws.Cells(i, 9).Value
-            End If
+            End If       
         
-        
-        Next i
-                 
-
+        Next i               
 
     ws.Range("A:J").Columns.AutoFit 'how to make all cells autofit?
 
